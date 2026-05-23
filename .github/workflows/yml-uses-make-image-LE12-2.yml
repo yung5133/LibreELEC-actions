@@ -145,8 +145,8 @@ jobs:
         if: inputs.ephemeral == 'ephemeral'
         run: |
           cd LibreELEC.tv
-          # set the build_dir=/build
-          echo "build_dir=/build" >> $GITHUB_ENV
+          # set the build_dir=./build
+          echo "build_dir=./build" >> $GITHUB_ENV
           echo "CCACHE_DISABLE=0" >> $GITHUB_ENV
 
       - name: Prepare the LibreELEC.tv directory - use /build-root and /target
