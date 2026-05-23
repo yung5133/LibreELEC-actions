@@ -76,6 +76,7 @@ jobs:
       project: Rockchip
       arch: aarch64
       device: RK3399
+      uboot: leez-p710
       targetbuilddir: build.LibreELEC-RK3399.aarch64-12.2-devel
       buildperiodic: ${{ github.event.inputs.le_periodic_version || 'nightly' }}
       ccachecachesize: 10G
