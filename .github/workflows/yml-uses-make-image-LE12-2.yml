@@ -85,6 +85,7 @@ env:
   PROJECT: ${{ inputs.project }}
   ARCH: ${{ inputs.arch }}
   DEVICE: ${{ inputs.device }}
+  UBOOT_SYSTEM: ${{ inputs.uboot }}
   TARGETBUILDDIR: ${{ inputs.targetbuilddir }}
   BUILD_PERIODIC: ${{ inputs.buildperiodic }}
   LE_DISTRO_VERSION: ${{ inputs.version }}
