@@ -50,7 +50,12 @@ on:
         type: string
       device:
         description: "target device"
-        default: ""
+        default: "RK3399"
+        required: false
+        type: string
+      uboot:
+        description: "target uboot"
+        default: "leez-p710"
         required: false
         type: string
       targetbuilddir:
