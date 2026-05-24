@@ -143,8 +143,9 @@ jobs:
           # 缓存 key 应包含足够区分不同构建的变量
           key: sources-Rockchip-RK3399-aarch64-leez-p710
           restore-keys: |
-            sources-${{ inputs.project }}-${{ inputs.arch }}-${{ inputs.device }}-
-            sources-${{ inputs.project }}-${{ inputs.arch }}-
+            sources-Rockchip-RK3399-aarch64-leez-
+            sources-Rockchip-RK3399-aarch6-
+            sources-Rockchip-RK3399-
             sources-
 
 
@@ -191,7 +192,7 @@ jobs:
           docker run --rm -v ${{ env.BASEDIR }}/target:/target \
                           -v ${{ env.BASEDIR }}/build-root:/build-root \
                           -v `pwd`:/build \
-                          -v LibreELEC.tv/source:/build/source \
+                          -v source:/build/source \
                           -w /build -i \
                           -e PROJECT=${{ env.PROJECT }} \
                           -e ARCH=${{ env.ARCH }} \
