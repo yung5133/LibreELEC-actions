@@ -139,9 +139,9 @@ jobs:
         uses: actions/cache@v4
         id: cache-sources
         with:
-          path: ~/leez/sources
+          path: LibreELEC.tv/sources
           # 缓存 key 应包含足够区分不同构建的变量
-          key: sources-${{ inputs.project }}-${{ inputs.arch }}-${{ inputs.device }}-${{ inputs.gitref }}
+          key: sources-Rockchip-RK3399-aarch64-leez-p710
           restore-keys: |
             sources-${{ inputs.project }}-${{ inputs.arch }}-${{ inputs.device }}-
             sources-${{ inputs.project }}-${{ inputs.arch }}-
@@ -191,7 +191,7 @@ jobs:
           docker run --rm -v ${{ env.BASEDIR }}/target:/target \
                           -v ${{ env.BASEDIR }}/build-root:/build-root \
                           -v `pwd`:/build \
-                          -v ${{ env.BASEDIR }}/source:/build/source \
+                          -v LibreELEC.tv/source:/build/source \
                           -w /build -i \
                           -e PROJECT=${{ env.PROJECT }} \
                           -e ARCH=${{ env.ARCH }} \
@@ -208,8 +208,8 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            ~/leez/sources
-          key: ${{ steps.cache-sources.outputs.cache-primary-key }}
+            LibreELEC.tv/sources
+          key: sources-Rockchip-RK3399-aarch64-leez-p710
   
       - name: Prepare artifacts - ephemeral
         if: inputs.ephemeral == 'ephemeral'
