@@ -154,7 +154,7 @@ jobs:
           cd LibreELEC.tv
           # set the build_dir=/build
           echo "build_dir=/build" >> $GITHUB_ENV
-          echo "CCACHE_DISABLE=0" >> $GITHUB_ENV
+          echo "CCACHE_DISABLE=1" >> $GITHUB_ENV
 
       - name: Prepare the LibreELEC.tv directory - use /build-root and /target
         if: inputs.ephemeral == 'no_ephemeral'
@@ -203,6 +203,14 @@ jobs:
                           gh-${{ github.run_id }} ${{ inputs.buildcmd }} ${{ env.NOOBS }}
         continue-on-error: true
 
+      - name: Save Cache (sources & ccache)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/leez/sources
+          key: ${{ steps.cache-sources.outputs.cache-primary-key }}
+  
       - name: Prepare artifacts - ephemeral
         if: inputs.ephemeral == 'ephemeral'
         run: |
