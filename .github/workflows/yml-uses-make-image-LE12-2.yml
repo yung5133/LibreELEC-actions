@@ -85,7 +85,7 @@ on:
         type: string
 
 env:
-  BASEDIR: ./leez
+  BASEDIR: ~/leez
   # Distro Target Variables
   PROJECT: ${{ inputs.project }}
   ARCH: ${{ inputs.arch }}
@@ -116,7 +116,7 @@ jobs:
       - name: Customise the checked out git repository
         run: |
           cd LibreELEC.tv
-          mkdir -p ./leez/{build-root,sources,target}
+          mkdir -p ~/leez/{build-root,sources,target}
           sed -i -e "s/RUN adduser/RUN adduser --uid $(id -u)/" tools/docker/jammy/Dockerfile
           sed -i -e 's/^CCACHE_CACHE_SIZE=.*/CCACHE_CACHE_SIZE="${{ inputs.ccachecachesize }}"/' config/options
           sed -i -e 's/USE_REUSABLE="no"/USE_REUSABLE="yes"/' distributions/LibreELEC/options
@@ -135,13 +135,26 @@ jobs:
           cd LibreELEC.tv
           docker build --pull -t gh-${{ github.run_id }} tools/docker/jammy
 
+      - name: Cache sources (downloaded tarballs)
+        uses: actions/cache@v4
+        id: cache-sources
+        with:
+          path: ~/leez/sources
+          # 缓存 key 应包含足够区分不同构建的变量
+          key: sources-${{ inputs.project }}-${{ inputs.arch }}-${{ inputs.device }}-${{ inputs.gitref }}
+          restore-keys: |
+            sources-${{ inputs.project }}-${{ inputs.arch }}-${{ inputs.device }}-
+            sources-${{ inputs.project }}-${{ inputs.arch }}-
+            sources-
+
+
       - name: Prepare the LibreELEC.tv directory - do not leave files behind
         if: inputs.ephemeral == 'ephemeral'
         run: |
           cd LibreELEC.tv
           # set the build_dir=/build
           echo "build_dir=/build" >> $GITHUB_ENV
-          echo "CCACHE_DISABLE=1" >> $GITHUB_ENV
+          echo "CCACHE_DISABLE=0" >> $GITHUB_ENV
 
       - name: Prepare the LibreELEC.tv directory - use /build-root and /target
         if: inputs.ephemeral == 'no_ephemeral'
@@ -176,9 +189,9 @@ jobs:
         run: |
           cd LibreELEC.tv
           docker run --rm -v ${{ env.BASEDIR }}/target:/target \
-                          -v ${{ env.BASEDIR }}/source:/source \
                           -v ${{ env.BASEDIR }}/build-root:/build-root \
                           -v `pwd`:/build \
+                          -v ${{ env.BASEDIR }}/source:/build/source \
                           -w /build -i \
                           -e PROJECT=${{ env.PROJECT }} \
                           -e ARCH=${{ env.ARCH }} \
