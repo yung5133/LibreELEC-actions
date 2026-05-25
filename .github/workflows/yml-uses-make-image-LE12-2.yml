@@ -5,32 +5,32 @@ on:
       clean_le:
         # This setting is only used when builds are NOT ephemeral
         description: "Should the workflow clean the /build-root"
-        #default: no_clean_le
+        default: no_clean_le
         required: true
         type: string
       debug:
         description: "Provide debug output from GHA run"
-        #default: no_debug
+        default: no_debug
         required: true
         type: string
       ephemeral:
         description: "Target and build-root are ephemeral"
-        #default: ephemeral
+        default: ephemeral
         required: true
         type: string
       upload:
         description: "Upload the images to the release server"
-        #default: no_upload
+        default: upload
         required: true
         type: string
       buildcmd:
         description: "build command to run"
-        #default: "make image"
+        default: "make image"
         required: true
         type: string
       gitref:
         description: "git branch or hash to build"
-        #default: libreelec-10.0
+        default: libreelec-12.2
         required: true
         type: string
       group:
@@ -136,7 +136,7 @@ jobs:
           docker build --pull -t gh-${{ github.run_id }} tools/docker/jammy
 
       - name: Cache sources (downloaded tarballs)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: cache-sources
         with:
           path: LibreELEC.tv/sources
@@ -207,7 +207,7 @@ jobs:
 
       - name: Save Cache (sources & ccache)
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             LibreELEC.tv/sources
@@ -263,18 +263,6 @@ jobs:
           cd LibreELEC.tv
           ls -lah target/
 
-      - name: Upload OFFICIAL Release image
-        if: (inputs.buildperiodic == 'official') && (inputs.upload == 'upload')
-        run: |
-          cd LibreELEC.tv
-          if [[ "${{ env.PROJECT }}" == "Generic" ]]; then
-            scp -P ${{ secrets.RELEASES_HOST_PORT }} target/*.{ova,ova.sha256,tar,tar.sha256,img.gz,img.gz.sha256} \
-              ${{ secrets.RELEASES_USERNAME }}@${{ secrets.RELEASES_HOST }}:${{ secrets.RELEASES_UPLOAD_PATH }}
-          else
-            scp -P ${{ secrets.RELEASES_HOST_PORT }} target/*.{tar,tar.sha256,img.gz,img.gz.sha256} \
-              ${{ secrets.RELEASES_USERNAME }}@${{ secrets.RELEASES_HOST }}:${{ secrets.RELEASES_UPLOAD_PATH }}
-          fi
-
       - name: Upload files to Release
         uses: ophub/upload-to-releases@main
         with:
@@ -285,7 +273,7 @@ jobs:
           remove_artifacts: false
           replaces_artifacts: true
           make_latest: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
           if-no-files-found: ignore
           body: |
             Build LibreELEC for Leez-P710
