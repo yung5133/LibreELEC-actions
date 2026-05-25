@@ -197,6 +197,7 @@ jobs:
                           -e PROJECT=${{ env.PROJECT }} \
                           -e ARCH=${{ env.ARCH }} \
                           -e DEVICE=${{ env.DEVICE }} \
+                          -e UBOOT_SYSTEM=${{ env.UBOOT_SYSTEM }} \
                           -e ONELOG=no -e LOGCOMBINE=fail \
                           -e BUILD_DIR=${{ env.build_dir }} \
                           -e BUILD_PERIODIC=${{ env.BUILD_PERIODIC }} \
@@ -274,12 +275,18 @@ jobs:
               ${{ secrets.RELEASES_USERNAME }}@${{ secrets.RELEASES_HOST }}:${{ secrets.RELEASES_UPLOAD_PATH }}
           fi
 
-      - name: Upload nightly image
-        uses: softprops/action-gh-release@v2
+      - name: Upload files to Release
+        uses: ophub/upload-to-releases@main
         with:
-          files: |
-             LibreELEC.tv/target/*.{tar,tar.sha256,img.gz,img.gz.sha256}
-          if-no-files-found: ignore
-        env:
+          tag: "leez-le12.2"
+          repo: "${{ github.repository_owner }}/LibreELEC.tv"
+          artifacts:  LibreELEC.tv/target/*.{tar,tar.sha256,img.gz,img.gz.sha256}
+          allow_updates: true
+          remove_artifacts: false
+          replaces_artifacts: true
+          make_latest: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if-no-files-found: ignore
+          body: |
+            Build LibreELEC for Leez-P710
           
