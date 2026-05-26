@@ -268,7 +268,7 @@ jobs:
         with:
           tag: "leez-le12.2"
           repo: "${{ github.repository_owner }}/LibreELEC.tv"
-          artifacts:  target/*.{tar,tar.sha256,img.gz,img.gz.sha256}
+          artifacts:  LibreELEC.tv/target/*
           allow_updates: true
           remove_artifacts: false
           replaces_artifacts: true
