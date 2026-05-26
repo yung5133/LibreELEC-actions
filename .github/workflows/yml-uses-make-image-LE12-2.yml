@@ -267,7 +267,7 @@ jobs:
         uses: ophub/upload-to-releases@main
         with:
           tag: "leez-le12.2"
-          repo: "${{ github.repository_owner }}/LibreELEC.tv"
+          repo: "${{ github.repository_owner }}/LibreELEC-actions"
           artifacts:  LibreELEC.tv/target/*
           allow_updates: true
           remove_artifacts: false
